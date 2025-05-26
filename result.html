@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>성향 분석 결과</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f7f8fc;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #6a5acd;
+    }
+
+    .mbti {
+      font-size: 40px;
+      font-weight: bold;
+      color: #4b3d9a;
+      margin-bottom: 0.5rem;
+    }
+
+    .mbti-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .desc {
+      font-size: 16px;
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .bar-chart {
+      width: 100%;
+      max-width: 340px;
+      font-size: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+
+    .bar {
+      display: flex;
+      height: 14px;
+      background: #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-inner {
+      height: 100%;
+    }
+
+    .bar-left {
+      background-color: #6a9eff;
+    }
+
+    .bar-right {
+      background-color: #ff9e9e;
+    }
+
+    .again-btn {
+      padding: 0.9rem 1.5rem;
+      font-size: 16px;
+      background-color: #6a9eff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .again-btn:hover {
+      background-color: #4f83ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">당신의 성향 결과는...</div>
+  <div class="mbti" id="mbti-result">결과</div>
+  <div class="mbti-title" id="mbti-title">MBTI 유형명</div>
+  <div class="desc" id="mbti-desc">잠시만 기다려주세요...</div>
+
+  <div class="bar-chart" id="mbti-bars"></div>
+
+  <button class="again-btn" onclick="location.href='form.html'">다시 테스트하기</button>
+
+  <script>
+    const scores = JSON.parse(localStorage.getItem("mbti_scores"));
+
+    function getAxisScore(pos, neg) {
+      return scores[pos] >= scores[neg] ? pos : neg;
+    }
+
+    const mbti =
+      getAxisScore("E", "I") +
+      getAxisScore("S", "N") +
+      getAxisScore("T", "F") +
+      getAxisScore("J", "P");
+
+    const descriptions = {
+      ISTJ: { title: "현실주의 관리자", description: "원칙을 중시하는 신뢰의 아이콘" },
+      ISFJ: { title: "조용한 수호자", description: "조용한 수호자" },
+      INFJ: { title: "통찰력 있는 조언자", description: "통찰력 있는 조언자" },
+      INTJ: { title: "전략적인 설계자", description: "장기적 계획과 독립적 사고의 달인" },
+      ISTP: { title: "유능한 실용주의자", description: "조용한 손재주꾼, 상황 적응력 갑" },
+      ISFP: { title: "감성적인 예술가", description: "감정이 풍부한 평화주의자" },
+      INFP: { title: "이상주의적 중재자", description: "가치 중심의 내면형 몽상가" },
+      INTP: { title: "논리적 탐구자", description: "개념과 시스템을 사랑하는 분석형" },
+      ESTP: { title: "현장형 해결사", description: "즉각적 판단과 행동이 빠른 액션러" },
+      ESFP: { title: "자유로운 퍼포머", description: "분위기를 띄우는 감각적 엔터테이너" },
+      ENFP: { title: "에너지 넘치는 활동가", description: "호기심과 감성의 혼종형" },
+      ENTP: { title: "아이디어 폭격기", description: "몰입형 창조자, 즉흥적이지만 구조화된 사고 가능" },
+      ESTJ: { title: "엄격한 책임자", description: "규칙과 시스템을 중시하는 조직 관리자" },
+      ESFJ: { title: "친화력 있는 돌봄자", description: "사람을 챙기고 이끄는 친절한 리더" },
+      ENFJ: { title: "열정적인 리더", description: "타인을 이끄는 따뜻한 비전가" },
+      ENTJ: { title: "결단력 있는 지휘관", description: "계획과 추진력으로 밀어붙이는 전략가" }
+    };
+
+    const result = descriptions[mbti];
+
+    document.getElementById("mbti-result").innerText = mbti;
+    document.getElementById("mbti-title").innerText = result?.title || "알 수 없는 유형";
+    document.getElementById("mbti-desc").innerText = result?.description || "당신만의 독특한 성향이네요!";
+
+    const bars = [
+      ["E", "I"],
+      ["S", "N"],
+      ["T", "F"],
+      ["J", "P"]
+    ];
+
+    function createBar(pos, neg) {
+  const posScore = scores[pos] ?? 0;
+  const negScore = scores[neg] ?? 0;
+  const total = posScore + negScore;
+
+  // 방어 코드: 점수 합이 0이면 50:50 처리
+  const posPercent = total === 0 ? 50 : Math.round((posScore / total) * 100);
+  const negPercent = total === 0 ? 50 : 100 - posPercent;
+
+  return `
+    <div class="bar-label">${pos} (${posPercent}%) — ${neg} (${negPercent}%)</div>
+    <div class="bar">
+      <div class="bar-inner bar-left" style="width: ${posPercent}%"></div>
+      <div class="bar-inner bar-right" style="width: ${negPercent}%"></div>
+    </div>
+  `;
+}
+
+
+
+    let html = "";
+    bars.forEach(([pos, neg]) => {
+      html += createBar(pos, neg);
+    });
+
+    document.getElementById("mbti-bars").innerHTML = html;
+  </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepLog 로그인</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', sans-serif;
+      background: linear-gradient(to bottom, #f7faff, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 360px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .logo img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.85rem;
+      margin-bottom: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      font-size: 1rem;
+      background-color: #6a9eff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #4f83ff;
+    }
+
+    .kakao-btn {
+      margin-top: 1rem;
+      background-color: #fee500;
+      color: #3c1e1e;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .link {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .link a {
+      color: #6a9eff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="mnt/data/logo.png" alt="DeepLog 로고" />
+    </div>
+    <input type="email" id="email" placeholder="이메일 주소" />
+    <input type="password" id="password" placeholder="비밀번호" />
+    <button onclick="login()">로그인</button>
+    <button class="kakao-btn" onclick="kakaoLogin()">카카오톡으로 로그인</button>
+    <div class="link">
+      아직 계정이 없으신가요? <a href="signup.html">회원가입</a>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("이메일과 비밀번호를 모두 입력하세요.");
+        return;
+      }
+
+      if (email === "abcd@naver.com" && password === "1234") {
+        window.location.href = "main.html";
+      } else {
+        alert("이메일 또는 비밀번호가 올바르지 않습니다.");
+      }
+    }
+
+    function kakaoLogin() {
+      alert("카카오 로그인 기능은 아직 연결되지 않았습니다."); // 추후 실제 연동 추가
+    }
+  </script>
+</body>
+</html>
