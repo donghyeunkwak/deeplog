@@ -150,13 +150,12 @@
     ];
 
     function createBar(pos, neg) {
-  const posScore = scores[pos] ?? 0;
-  const negScore = scores[neg] ?? 0;
+  const posScore = Number(scores[pos] ?? 0);
+  const negScore = Number(scores[neg] ?? 0);
   const total = posScore + negScore;
 
-  // 방어 코드: 점수 합이 0이면 50:50 처리
   const posPercent = total === 0 ? 50 : Math.round((posScore / total) * 100);
-  const negPercent = total === 0 ? 50 : 100 - posPercent;
+  const negPercent = 100 - posPercent;
 
   return `
     <div class="bar-label">${pos} (${posPercent}%) — ${neg} (${negPercent}%)</div>
@@ -166,6 +165,7 @@
     </div>
   `;
 }
+
 
 
 
